@@ -2,6 +2,10 @@
 const green = '#4CAF50';
 const red = '#F44336';
 
+// Valid and invalid consts for readability
+const VALID = true;
+const INVALID = false;
+
 // Utility functions
 const setInvalid = (field, message) => {
   field.className = 'invalid';
@@ -12,97 +16,94 @@ const setValid = (field) => {
   field.className = 'valid';
   field.nextElementSibling.innerHTML = '';
 };
-const checkIfOnlyLetters = (field) => {
-  if (/^[a-zA-Z ]+$/.test(field.value)) {
-    setValid(field);
-    return true;
+const setValidationRes = (valid, error) => {
+  if (valid) return { valid };
+  else return { valid, error };
+};
+const checkIfOnlyLetters = (value) => {
+  if (/^[a-zA-Z ]+$/.test(value)) {
+    return setValidationRes(VALID);
   } else {
-    setInvalid(field, `${field.name} must contain only letters`);
-    return false;
+    return setValidationRes(INVALID, 'Must contain only letters');
   }
 };
-const checkIfEmpty = (field) => {
-  if (isEmpty(field.value.trim())) {
-    // set field invalid
-    setInvalid(field, `${field.name} must not be empty`);
-    return true;
+const checkIfEmpty = (value) => {
+  if (isEmpty(value.trim())) {
+    return setValidationRes(INVALID, 'Must not be empty'); // e.g. { valid: false, error: 'Must not be empty' }
   } else {
-    // set field valid
-    setValid(field);
-    return false;
+    return setValidationRes(VALID);
   }
 };
 const isEmpty = (value) => {
   if (value === '') return true;
   return false;
 };
-const meetLength = (field, minLength, maxLength) => {
-  if (field.value.length >= minLength && field.value.length < maxLength) {
-    setValid(field);
-    return true;
+const meetLength = (value, minLength, maxLength) => {
+  if (value.length >= minLength && value.length < maxLength) {
+    return setValidationRes(VALID);
   } else if (field.value.length < minLength) {
-    setInvalid(
-      field,
-      `${field.name} must be at least ${minLength} characters long`
+    return setValidationRes(
+      INVALID,
+      `Must be at least ${minLength} characters long`
     );
-    return false;
   } else {
-    setInvalid(
-      field,
-      `${field.name} must be shorter than ${maxLength} characters`
+    return setValidationRes(
+      INVALID,
+      `Must be shorter than ${maxLength} characters`
     );
-    return false;
   }
 };
-const containsCharacters = (field, code) => {
+// if value contains a set of characters (depending of code case) return valid response
+const containsCharacters = (value, code) => {
   let regEx;
   switch (code) {
     case 1:
       // letters
       regEx = /(?=.*[a-zA-Z])/;
-      return matchWithRegEx(regEx, field, 'Must contain at least one letter');
+      return matchRegExAndGetRes(
+        regEx,
+        value,
+        'Must contain at least one letter'
+      );
     case 2:
       // letter and numbers
       regEx = /(?=.*\d)(?=.*[a-zA-Z])/;
-      return matchWithRegEx(
+      return matchRegExAndGetRes(
         regEx,
-        field,
+        value,
         'Must contain at least one letter and one number'
       );
     case 3:
       // uppercase, lowercase and number
       regEx = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])/;
-      return matchWithRegEx(
+      return matchRegExAndGetRes(
         regEx,
-        field,
+        value,
         'Must contain at least one uppercase, one lowercase letter and one number'
       );
     case 4:
       // uppercase, lowercase, number and special char
       regEx = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W)/;
-      return matchWithRegEx(
+      return matchRegExAndGetRes(
         regEx,
-        field,
+        value,
         'Must contain at least one uppercase, one lowercase letter, one number and one special character'
       );
     case 5:
       // Email pattern
       regEx = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-      return matchWithRegEx(regEx, field, 'Must be a valid email address');
+      return matchRegExAndGetRes(regEx, value, 'Must be a valid email address');
     default:
-      return false;
+      return setValidationRes(INVALID, 'Oups, something went wrong');
   }
 };
-const matchWithRegEx = (regEx, field, message) => {
-  if (field.value.match(regEx)) {
-    setValid(field);
-    return true;
-  } else {
-    setInvalid(field, message);
-    return false;
-  }
+// If value matches RegEx return valid res else return invalid with err
+const matchRegExAndGetRes = (regEx, value, error) => {
+  if (value.match(regEx)) return setValidationRes(VALID);
+  return setValidationRes(INVALID, error);
 };
 
+// Exports functions for use and for testing
 module.exports = {
   setValid,
   setInvalid,
@@ -111,5 +112,6 @@ module.exports = {
   checkIfEmpty,
   meetLength,
   containsCharacters,
-  matchWithRegEx
+  matchRegExAndGetRes,
+  setValidationRes
 };

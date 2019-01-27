@@ -1,50 +1,51 @@
+// Importing util functions
 import {
-  setValid,
-  setInvalid,
   checkIfOnlyLetters,
   checkIfEmpty,
   meetLength,
-  containsCharacters
+  containsCharacters,
+  setValidationRes
 } from './utilityFunctions';
+
+// Valid result
+const validResponse = {
+  valid: true
+};
+
 // Validators
-const validateName = (field) => {
+const validateName = (value) => {
   // check if is empty
-  if (checkIfEmpty(field)) return;
+  if (!checkIfEmpty(value).valid) return checkIfEmpty(value);
   // is if it has only letters
-  if (!checkIfOnlyLetters(field)) return;
-  return true;
+  if (!checkIfOnlyLetters(value).valid) return checkIfOnlyLetters(value);
+  return validResponse;
 };
 const validatePassword = (password) => {
   // Empty check
-  if (checkIfEmpty(password)) return;
+  if (!checkIfEmpty(password).valid) return checkIfEmpty(password);
   // Must of in certain length
-  if (!meetLength(password, 4, 100)) return;
+  if (!meetLength(password, 4, 100).valid) return meetLength(password, 4, 100);
   // check password against our character set
   // 1- a
   // 2- a 1
   // 3- A a 1
   // 4- A a 1 @
-  //   if (!containsCharacters(password, 4)) return;
-  return true;
+  if (!containsCharacters(password, 1).valid)
+    return containsCharacters(password, 1);
+  return validResponse;
 };
 const validateConfirmPassword = (password, confirmPassword) => {
-  if (password.className !== 'valid') {
-    setInvalid(confirmPassword, 'Password must be valid');
-    return;
-  }
+  if (!validatePassword(password).valid)
+    return setValidationRes(false, 'Password must be valid');
   // If they match
-  if (password.value !== confirmPassword.value) {
-    setInvalid(confirmPassword, 'Passwords must match');
-    return;
-  } else {
-    setValid(confirmPassword);
-  }
-  return true;
+  if (password !== confirmPassword)
+    return setValidationRes(false, 'Passwords must match');
+  return validResponse;
 };
 const validateEmail = (email) => {
-  if (checkIfEmpty(email)) return;
-  if (!containsCharacters(email, 5)) return;
-  return true;
+  if (!checkIfEmpty(email).valid) return checkIfEmpty(email);
+  if (!containsCharacters(email, 5).valid) return containsCharacters(email, 5);
+  return validResponse;
 };
 
 export {

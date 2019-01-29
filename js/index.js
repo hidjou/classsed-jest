@@ -15,13 +15,19 @@ const form = document.getElementById('myForm');
 const addFocusOutEvent = (field) => {
   field.addEventListener('focusout', () => {
     // If field value is invalid, set input to invalid else set valid
-    const result = validateField(field.id);
-    if (!result.valid) {
-      setInvalid(field, result.error);
-    } else {
-      setValid(field);
-    }
+    validateFieldAndSetError(field);
   });
+};
+
+const validateFieldAndSetError = (field) => {
+  const result = validateField(field.id);
+  if (!result.valid) {
+    setInvalid(field, result.error);
+    return false;
+  } else {
+    setValid(field);
+    return true;
+  }
 };
 
 // Get fields and add onfocusout event to them
@@ -58,16 +64,17 @@ const validateField = (field) => {
 };
 
 // Handle form
-form.addEventListener('submit', function(event) {
+form.addEventListener('submit', (event) => {
   // Prevent default behaviour
   event.preventDefault();
   if (
-    validateField('firstName') &&
-    validateField('lastName') &&
-    validateField('password') &&
-    validateField('confirmPassword') &&
-    validateField('email')
+    validateFieldAndSetError(firstNameField) &&
+    validateFieldAndSetError(lastNameField) &&
+    validateFieldAndSetError(passwordField) &&
+    validateFieldAndSetError(confirmPasswordField) &&
+    validateFieldAndSetError(emailField)
   ) {
+    console.log(validateField('firstName'));
     // Get user's name
     const name = firstName.value;
     // Get container

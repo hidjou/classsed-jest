@@ -4,9 +4,9 @@
   "description": "Validating a form and testing the validator functions",
   "main": "index.js",
   "scripts": {
-    "start": "webpack-dev-server --config ./config/webpack.config --mode development --entry ./js/index.js --output-filename ./dist/bundled.js",
-    "build": "webpack --config ./config/webpack.config --mode production",
-    "dev": "webpack --config ./config/webpack.config --mode development"
+    "start": "webpack-dev-server --mode development --entry ./js/index.js --output-filename ./dist/bundled.js",
+    "build": "webpack --mode production",
+    "dev": "webpack --mode development"
   },
   "repository": {
     "type": "git",

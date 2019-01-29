@@ -104,7 +104,7 @@ const matchRegExAndGetRes = (regEx, value, error) => {
 };
 
 // Exports functions for use and for testing
-module.exports = {
+export {
   setValid,
   setInvalid,
   checkIfOnlyLetters,

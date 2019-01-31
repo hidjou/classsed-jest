@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest --verbose",
-    "start": "webpack-dev-server --mode development --entry ./js/index.js --output-filename ./dist/bundled.js",
+    "start": "webpack-dev-server --mode development --open --entry ./js/index.js --output-filename ./dist/bundled.js",
     "build": "webpack --mode production",
     "dev": "webpack --mode development"
   },
@@ -36,5 +36,7 @@
     "webpack-cli": "^3.2.1",
     "webpack-dev-server": "^3.1.14"
   },
-  "dependencies": {}
+  "dependencies": {
+    "puppeteer": "^1.11.0"
+  }
 }

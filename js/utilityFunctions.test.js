@@ -1,4 +1,4 @@
-import { isEmpty, checkIfEmpty, setValidationRes } from './utilityFunctions';
+import { isEmpty, checkIfEmpty } from './utilityFunctions';
 
 let result;
 
